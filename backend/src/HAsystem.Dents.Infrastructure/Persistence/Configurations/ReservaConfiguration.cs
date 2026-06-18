@@ -1,6 +1,7 @@
 ﻿
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using HAsystem.Dents.Domain.Aggregates.PacienteAggregates;
 using HAsystem.Dents.Domain.Aggregates.ReservaAggregates;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HAsystem.Dents.Infrastructure.Persistence.Configurations;
 public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
@@ -10,10 +11,15 @@ public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
     {
         builder.ToTable("Reserva");
 
-        builder.HasKey(e => e.IdPaciente);
+        builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.Id)
+               .ValueGeneratedOnAdd()
+               .UsePropertyAccessMode(PropertyAccessMode.Field)
+               .HasColumnName("IdReserva");
 
         builder.Property(e => e.IdPaciente)
-               .ValueGeneratedOnAdd()
+               .IsRequired()
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("IdPaciente");
 
@@ -50,6 +56,11 @@ public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
                .IsRequired()
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("Dni");
+
+        builder.HasOne(e => e.Paciente)
+               .WithMany(p => p.Reservas)
+               .HasForeignKey(e => e.IdPaciente)
+               .OnDelete(DeleteBehavior.Restrict);
     }
 
 }
