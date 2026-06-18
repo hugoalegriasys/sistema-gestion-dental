@@ -96,7 +96,7 @@ namespace Ngsystem.FrontDentis.Pages.Reserva
             _            => Color.Default
         };
 
-        public async Task CambiarEstadoRapido(LisReservaResponseDto reserva, string nuevoEstado)
+        public async Task CambiarEstado(LisReservaResponseDto reserva, string nuevoEstado)
         {
             var request = new SaveReservaRequestDto
             {

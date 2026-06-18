@@ -72,15 +72,17 @@ else
                             <MudTd>@reserva.FechaAtencion</MudTd>
                             <MudTd>@(reserva.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
                             <MudTd>
-                                <MudMenu Direction="Direction.Bottom" OffsetX="true" FullWidth="false">
+                                <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                                     <ActivatorContent>
                                         <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>
                                     </ActivatorContent>
-                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Confirmada"))">Confirmada</MudMenuItem>
-                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Pendiente"))">Pendiente</MudMenuItem>
-                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Cancelada"))">Cancelada</MudMenuItem>
-                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Atendida"))">Atendida</MudMenuItem>
-                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Reprogramada"))">Reprogramada</MudMenuItem>
+                                    <ChildContent>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Confirmada"))">Confirmada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Pendiente"))">Pendiente</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Cancelada"))">Cancelada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Atendida"))">Atendida</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Reprogramada"))">Reprogramada</MudMenuItem>
+                                    </ChildContent>
                                 </MudMenu>
                             </MudTd>
                             <MudTd>
