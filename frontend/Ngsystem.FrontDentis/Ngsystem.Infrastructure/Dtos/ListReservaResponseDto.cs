@@ -17,8 +17,8 @@ public class LisReservaResponseDto
     public int IdReserva { get; set; }
     public int IdPaciente { get; set; }
     public string? EstadoReserva { get; set; }
-    public DateTime FechaReserva { get; set; }
-    public DateTime FechaAtencion { get; set; }
+    public string? FechaReserva { get; set; }
+    public string? FechaAtencion { get; set; }
     public string? HoraAtencion { get; set; }
     public string? MotivoConsulta { get; set; }
     public string? Observaciones { get; set; }

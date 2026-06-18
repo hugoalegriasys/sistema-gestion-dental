@@ -68,8 +68,8 @@ else
                         </HeaderContent>
                         <RowTemplate Context="reserva">
                             <MudTd>@reserva.Dni</MudTd>
-                            <MudTd>@reserva.FechaReserva.ToString("yyyy-MM-dd")</MudTd>
-                            <MudTd>@reserva.FechaAtencion.ToString("yyyy-MM-dd")</MudTd>
+                            <MudTd>@reserva.FechaReserva</MudTd>
+                            <MudTd>@reserva.FechaAtencion</MudTd>
                             <MudTd>@(reserva.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
                             <MudTd>
                                 <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>

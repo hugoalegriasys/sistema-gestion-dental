@@ -15,24 +15,23 @@ public class ModalReservaBase : ComponentBase
     [Inject] IDialogService _dialogServicio { get; set; }
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    public DateTime fechaReserva = DateTime.Today;
-    public DateTime fechaAtencion = DateTime.Today;
+    public DateTime? fechaReserva = DateTime.Today;
+    public DateTime? fechaAtencion = DateTime.Today;
     public TimeSpan? horaAtencion = null;
 
     protected override void OnInitialized()
     {
-        if (objReserva.FechaReserva != default)
-            fechaReserva = objReserva.FechaReserva;
+        if (!string.IsNullOrWhiteSpace(objReserva.FechaReserva)
+            && DateTime.TryParse(objReserva.FechaReserva, out var fr))
+            fechaReserva = fr;
 
-        if (objReserva.FechaAtencion != default)
-            fechaAtencion = objReserva.FechaAtencion;
+        if (!string.IsNullOrWhiteSpace(objReserva.FechaAtencion)
+            && DateTime.TryParse(objReserva.FechaAtencion, out var fa))
+            fechaAtencion = fa;
 
-        if (!string.IsNullOrWhiteSpace(objReserva.HoraAtencion))
-        {
-            var clean = objReserva.HoraAtencion.Split('.')[0];
-            if (TimeSpan.TryParse(clean, out var ts))
-                horaAtencion = ts;
-        }
+        if (!string.IsNullOrWhiteSpace(objReserva.HoraAtencion)
+            && TimeSpan.TryParse(objReserva.HoraAtencion.Split('.')[0], out var ha))
+            horaAtencion = ha;
     }
 
     public void Cancel() => MudDialog.Cancel();
@@ -62,8 +61,8 @@ public class ModalReservaBase : ComponentBase
         {
             IdPaciente = objReserva.IdPaciente > 0 ? objReserva.IdPaciente : 0,
             EstadoReserva = objReserva.EstadoReserva ?? string.Empty,
-            FechaReserva = fechaReserva.ToString("dd/MM/yyyy"),
-            FechaAtencion = fechaAtencion.ToString("dd/MM/yyyy"),
+            FechaReserva = fechaReserva?.ToString("dd/MM/yyyy") ?? string.Empty,
+            FechaAtencion = fechaAtencion?.ToString("dd/MM/yyyy") ?? string.Empty,
             HoraAtencion = horaAtencion?.ToString(@"hh\:mm") ?? string.Empty,
             MotivoConsulta = objReserva.MotivoConsulta ?? string.Empty,
             Observaciones = objReserva.Observaciones,
