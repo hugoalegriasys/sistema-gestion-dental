@@ -70,9 +70,9 @@ else
                             <MudTd>@reserva.Dni</MudTd>
                             <MudTd>@reserva.FechaReserva.ToString("yyyy-MM-dd")</MudTd>
                             <MudTd>@reserva.FechaAtencion.ToString("yyyy-MM-dd")</MudTd>
-                            <MudTd>@reserva.HoraAtencion.Split('.')[0]</MudTd>
+                            <MudTd>@(reserva.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
                             <MudTd>
-                                <MudChip Color="Color.Info">@reserva.EstadoReserva</MudChip>
+                                <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>
                             </MudTd>
                             <MudTd>
                                 <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">

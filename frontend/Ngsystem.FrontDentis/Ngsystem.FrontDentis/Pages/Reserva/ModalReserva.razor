@@ -27,7 +27,8 @@
                     </MudItem>
 
                     <MudItem xs="12" md="6">
-                        <MudDatePicker
+                        <MudDatePicker Value="@fechaReserva"
+                                       ValueChanged="@(v => fechaReserva = v)"
                                        Label="Fecha de Reserva"
                                        Required="true"
                                        Margin="Margin.Dense"
@@ -36,7 +37,8 @@
                     </MudItem>
 
                     <MudItem xs="12" md="6">
-                        <MudDatePicker
+                        <MudDatePicker Value="@fechaAtencion"
+                                       ValueChanged="@(v => fechaAtencion = v)"
                                        Label="Fecha de Atención"
                                        Required="true"
                                        Margin="Margin.Dense"
@@ -45,7 +47,8 @@
                     </MudItem>
 
                     <MudItem xs="12" md="6">
-                        <MudTimePicker @bind-Value="objReserva.HoraAtencion"
+                        <MudTimePicker Value="@horaAtencion"
+                                       ValueChanged="@(v => horaAtencion = v)"
                                        Label="Hora de Atención"
                                        Required="true"
                                        Margin="Margin.Dense"

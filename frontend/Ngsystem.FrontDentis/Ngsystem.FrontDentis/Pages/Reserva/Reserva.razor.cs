@@ -85,5 +85,15 @@ namespace Ngsystem.FrontDentis.Pages.Reserva
                 || (r.EstadoReserva?.ToLowerInvariant().Contains(s) ?? false)
                 || (r.MotivoConsulta?.ToLowerInvariant().Contains(s) ?? false);
         }
+
+        public Color GetEstadoColor(string? estado) => estado switch
+        {
+            "Confirmada" => Color.Success,
+            "Pendiente"  => Color.Warning,
+            "Cancelada"  => Color.Error,
+            "Atendida"   => Color.Primary,
+            "Reprogramada" => Color.Info,
+            _            => Color.Default
+        };
     }
 }
