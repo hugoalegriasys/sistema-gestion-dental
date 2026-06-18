@@ -1,0 +1,175 @@
+﻿@page "/Paciente/Paciente"
+@using Ngsystem.FrontDentis.Components
+@using Ngsystem.Infrastructure.Dtos
+@inherits WeatherBase
+
+@if (this.estadoLoad)
+{
+    <Loading />
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-5">
+        <MudPaper Elevation="3" Class="pa-4" Width="100%">
+            <MudGrid>
+                <MudItem xs="12">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <MudText Typo="Typo.h4" GutterBottom="true" Color="Color.Primary">
+                                <MudIcon Icon="@Icons.Material.Filled.People" Class="mr-2" />
+                                Gestión de Pacientes
+                            </MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Total de pacientes: @(listaPacienteDto?.Count() ?? 0)
+                            </MudText>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="text-align: right;">
+                                <MudButton Variant="Variant.Filled"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Color="Color.Primary"
+                                           Size="Size.Large"
+                                           OnClick="NuevoPaciente">
+                                    Nuevo Paciente
+                                </MudButton>
+                            </div>
+                        </div>
+                    </div>
+
+                    <MudTable Items="@listaPacienteDto"
+                              Dense="false"
+                              Striped="true"
+                              Bordered="true"
+                              Hover="true"
+                              Filter="new Func<LisPacienteResponseDto, bool>(FilterFunc1)"
+                              @bind-SelectedItem="selectedItem1"
+                              Loading="@_loading"
+                              LoadingProgressColor="Color.Info"
+                              Elevation="2">
+                        <ToolBarContent>
+                            <MudTextField @bind-Value="searchString1"
+                                          Placeholder="Buscar por nombre, apellido, DNI o teléfono..."
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Material.Filled.Search"
+                                          IconSize="Size.Medium"
+                                          Class="mt-0"
+                                          Variant="Variant.Outlined"
+                                          Margin="Margin.Dense"
+                                          Clearable="true">
+                            </MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel SortBy="new Func<LisPacienteResponseDto, object>(x => x.Nombre)">Nombre Completo</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<LisPacienteResponseDto, object>(x => x.Dni)">DNI</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<LisPacienteResponseDto, object>(x => x.Edad)">Edad</MudTableSortLabel></MudTh>
+                            <MudTh>Teléfono/Celular</MudTh>
+                            <MudTh>Email</MudTh>
+                            <MudTh>Dirección</MudTh>
+                            <MudTh>Estado</MudTh>
+                            <MudTh>Acciones</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="paciente">
+                            <MudTd DataLabel="Nombre Completo">
+                                <div class="d-flex align-center">
+                                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-3">
+                                        @(paciente.Nombre?.Substring(0, 1).ToUpper())
+                                    </MudAvatar>
+                                    <div>
+                                        <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                            @paciente.Nombre @paciente.Apellido
+                                        </MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                            @paciente.Genero
+                                        </MudText>
+                                    </div>
+                                </div>
+                            </MudTd>
+                            <MudTd DataLabel="DNI">
+                                <MudText Typo="Typo.body2">@paciente.Dni</MudText>
+                            </MudTd>
+                            <MudTd DataLabel="Edad">
+                                <MudChip Color="Color.Info" Size="Size.Small">
+                                    @(paciente.Edad?.ToString() ?? "N/A") años
+                                </MudChip>
+                            </MudTd>
+                            <MudTd DataLabel="Teléfono">
+                                <div>
+                                    @if (!string.IsNullOrEmpty(paciente.TelefonoFijo))
+                                    {
+                                        <MudText Typo="Typo.body2">
+                                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" Class="mr-1" />
+                                            @paciente.TelefonoFijo
+                                        </MudText>
+                                    }
+                                    @if (!string.IsNullOrEmpty(paciente.Celular))
+                                    {
+                                        <MudText Typo="Typo.body2">
+                                            <MudIcon Icon="@Icons.Material.Filled.PhoneAndroid" Size="Size.Small" Class="mr-1" />
+                                            @paciente.Celular
+                                        </MudText>
+                                    }
+                                </div>
+                            </MudTd>
+                            <MudTd DataLabel="Email">
+                                @if (!string.IsNullOrEmpty(paciente.Email))
+                                {
+                                    <MudText Typo="Typo.body2">@paciente.Email</MudText>
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Sin email</MudText>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="Dirección">
+                                <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    @(paciente.Direccion ?? "Sin dirección")
+                                </MudText>
+                            </MudTd>
+                            @* <MudTd DataLabel="Estado">
+                                @if (paciente.Activo == true)
+                                {
+                                    <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircle">
+                                        Activo
+                                    </MudChip>
+                                }
+                                else
+                                {
+                                    <MudChip Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Cancel">
+                                        Inactivo
+                                    </MudChip>
+                                }
+                            </MudTd> *@
+                            <MudTd DataLabel="Acciones">
+                                <MudButtonGroup>
+                                    <MudTooltip Text="Editar Paciente">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                       Color="Color.Primary"
+                                                       Size="Size.Small"
+                                                       OnClick="@(() => AbrirEditarPacientes(paciente))" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Ver Detalles">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                                       Color="Color.Info"
+                                                       Size="Size.Small"
+                                                       OnClick="@(() => MostrarDetalle())" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Eliminar">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                       Color="Color.Error"
+                                                       Size="Size.Small"
+                                                       OnClick="@(() => MostrarDetalle())" />
+                                    </MudTooltip>
+                                </MudButtonGroup>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                           RowsPerPageString="Filas por página"
+                                           InfoFormat="Mostrando {first_item}-{last_item} de {all_items}" />
+                        </PagerContent>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudContainer>
+}

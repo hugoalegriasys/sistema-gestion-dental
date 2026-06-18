@@ -1,0 +1,268 @@
+﻿@inherits ModalPacienteBase
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@objPaciente">
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                <MudTabPanel Text="Datos Personales" Icon="@Icons.Material.Filled.Person">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Nombre"
+                                          Class="mb-3"
+                                          Label="Nombre"
+                                          Variant="Variant.Outlined"
+                                          Margin="Margin.Dense"
+                                          Adornment="Adornment.End"
+                                          Required="true"
+                                          RequiredError="Este campo es obligatorio"
+                                          AdornmentIcon="@Icons.Material.Filled.Person"
+                                          AutoFocus="true" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Apellido"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Apellido"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          Required="true"
+                                          RequiredError="Este campo es obligatorio"
+                                          AdornmentIcon="@Icons.Material.Filled.Person" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Dni"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="DNI"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          Required="true"
+                                          RequiredError="Este campo es obligatorio"
+                                          MaxLength="8"
+                                          AdornmentIcon="@Icons.Material.Filled.Badge" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudDatePicker Label="Fecha de Nacimiento"
+                                           Margin="Margin.Dense"
+                                           Variant="Variant.Outlined"
+                                           Class="mb-3"
+                                           @bind-Date="fechaInicio"
+                                           Mask="@(new DateMask("dd/MM/yyyy"))"
+                                           AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Edad"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Edad"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          Required="true"
+                                          RequiredError="Este campo es obligatorio"
+                                          MaxLength="8"
+                                          AdornmentIcon="@Icons.Material.Filled.Badge" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudSelect Label="Género"
+                                       Margin="Margin.Dense"
+                                       T="int"
+                                       @bind-Value="tipoSeleccionado"
+                                       Variant="Variant.Outlined"
+                                       AnchorOrigin="Origin.BottomCenter"
+                                       Class="mb-3"
+                                       Required="true"
+                                       RequiredError="Este campo es obligatorio"
+                                       AdornmentIcon="@Icons.Material.Filled.Wc">
+                                @if (listaGenero.Any())
+                                {
+                                    foreach (var tipo in listaGenero)
+                                    {
+                                        <MudSelectItem Value="@tipo.Id">@tipo.Name</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Email"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Correo Electrónico"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Email"
+                                          InputType="InputType.Email" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.LugarNacimiento"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Lugar de Nacimiento"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.LocationOn" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Ciudad"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Ciudad"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.LocationCity" />
+                        </div>
+                    </div>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Contacto y Dirección" Icon="@Icons.Material.Filled.ContactPhone">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <MudTextField @bind-Value="@objPaciente.Direccion"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Dirección Completa"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          Required="true"
+                                          RequiredError="Este campo es obligatorio"
+                                          AdornmentIcon="@Icons.Material.Filled.Home"
+                                          Lines="2" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.TelefonoFijo"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Teléfono Fijo"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          MaxLength="9"
+                                          AdornmentIcon="@Icons.Material.Filled.Phone"
+                                          InputType="InputType.Telephone" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Celular"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Celular"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          MaxLength="9"
+                                          AdornmentIcon="@Icons.Material.Filled.PhoneAndroid"
+                                          InputType="InputType.Telephone" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Procedencia"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Procedencia"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Public" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Ocupacion"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Ocupación"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Work" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <MudTextField @bind-Value="@objPaciente.GradoInstruccion"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Grado de Instrucción"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.School" />
+                        </div>
+                    </div>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Información Médica" Icon="@Icons.Material.Filled.MedicalServices">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <MudTextField @bind-Value="@objPaciente.AlergiaMedicamentos"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Alergias a Medicamentos"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Warning"
+                                          Lines="3"
+                                          Placeholder="Describa cualquier alergia conocida a medicamentos..." />
+                        </div>
+                    </div>
+
+                    <MudAlert Severity="Severity.Info" Class="mb-3">
+                        <strong>Información del Apoderado/Contacto de Emergencia</strong>
+                    </MudAlert>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.Apoderado"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Nombre del Apoderado/Contacto"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.SupervisorAccount" />
+                        </div>
+                        <div class="col-md-6">
+                            <MudTextField @bind-Value="@objPaciente.TelefonoApoderado"
+                                          Class="mb-3"
+                                          Margin="Margin.Dense"
+                                          Label="Teléfono del Apoderado"
+                                          Variant="Variant.Outlined"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Phone"
+                                          InputType="InputType.Telephone" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                           @*  <MudCheckBox @bind-Checked="@objPaciente.Activo"
+                                         Label="Paciente Activo"
+                                         Color="Color.Primary"
+                                         Class="mb-3" /> *@
+                        </div>
+                    </div>
+                </MudTabPanel>
+            </MudTabs>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   OnClick="MostrarConfirmacion">
+            Guardar
+        </MudButton>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Default"
+                   StartIcon="@Icons.Material.Filled.Cancel"
+                   OnClick="Cancel">
+            Cancelar
+        </MudButton>
+    </DialogActions>
+</MudDialog>

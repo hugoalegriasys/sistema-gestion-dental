@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAsystem.Dents.Api", "src\HAsystem.Dents.Api\HAsystem.Dents.Api.csproj", "{294CF07A-D6BA-0215-5294-711651D5F7E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAsystem.Dents.Application", "src\HAsystem.Dents.Application\HAsystem.Dents.Application.csproj", "{C36966C6-FDB2-ACCF-6509-56142A108A43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAsystem.Dents.Core", "src\HAsystem.Dents.Core\HAsystem.Dents.Core.csproj", "{43EC9602-1722-EFC8-F538-A031DEE17D02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAsystem.Dents.Domain", "src\HAsystem.Dents.Domain\HAsystem.Dents.Domain.csproj", "{7BCB883B-D78B-F9C7-4517-BA12B750DC8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAsystem.Dents.Infrastructure", "src\HAsystem.Dents.Infrastructure\HAsystem.Dents.Infrastructure.csproj", "{435EC660-1B48-FF6A-8008-E8AAF04AF203}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{294CF07A-D6BA-0215-5294-711651D5F7E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294CF07A-D6BA-0215-5294-711651D5F7E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294CF07A-D6BA-0215-5294-711651D5F7E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294CF07A-D6BA-0215-5294-711651D5F7E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C36966C6-FDB2-ACCF-6509-56142A108A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C36966C6-FDB2-ACCF-6509-56142A108A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C36966C6-FDB2-ACCF-6509-56142A108A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C36966C6-FDB2-ACCF-6509-56142A108A43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43EC9602-1722-EFC8-F538-A031DEE17D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43EC9602-1722-EFC8-F538-A031DEE17D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43EC9602-1722-EFC8-F538-A031DEE17D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43EC9602-1722-EFC8-F538-A031DEE17D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BCB883B-D78B-F9C7-4517-BA12B750DC8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCB883B-D78B-F9C7-4517-BA12B750DC8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCB883B-D78B-F9C7-4517-BA12B750DC8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCB883B-D78B-F9C7-4517-BA12B750DC8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{435EC660-1B48-FF6A-8008-E8AAF04AF203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{435EC660-1B48-FF6A-8008-E8AAF04AF203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{435EC660-1B48-FF6A-8008-E8AAF04AF203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{435EC660-1B48-FF6A-8008-E8AAF04AF203}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56E35459-769F-40D7-850A-F1FBEAECC713}
+	EndGlobalSection
+EndGlobal

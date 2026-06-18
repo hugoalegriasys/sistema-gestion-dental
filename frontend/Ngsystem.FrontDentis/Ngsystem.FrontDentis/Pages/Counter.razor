@@ -1,0 +1,81 @@
+﻿@page "/counter"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cruz de cuadros</title>
+    <style>
+        .cruz {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 100px auto;
+        }
+
+        .cuadro {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid black;
+            background-color: white;
+        }
+
+        .centro {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .arriba {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .abajo {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .izquierda {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .derecha {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="cruz">
+        <div class="cuadro centro"></div>
+        <div class="cuadro arriba"></div>
+        <div class="cuadro abajo"></div>
+        <div class="cuadro izquierda"></div>
+        <div class="cuadro derecha"></div>
+    </div>
+</body>
+</html>
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

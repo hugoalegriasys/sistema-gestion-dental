@@ -1,0 +1,109 @@
+﻿@page "/Reserva/Reserva"
+@using Ngsystem.FrontDentis.Components
+@using Ngsystem.Infrastructure.Dtos
+@inherits ReservaBase
+
+@if (estadoLoad)
+{
+    <Loading />
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-5">
+        <MudPaper Elevation="3" Class="pa-4" Width="100%">
+            <MudGrid>
+                <MudItem xs="12">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <MudText Typo="Typo.h4" GutterBottom="true" Color="Color.Primary">
+                                <MudIcon Icon="@Icons.Material.Filled.EventNote" Class="mr-2" />
+                                Gestión de Reservas
+                            </MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Total de reservas: @(listaReservaDto?.Count() ?? 0)
+                            </MudText>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="text-align: right;">
+                                <MudButton Variant="Variant.Filled"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Color="Color.Primary"
+                                           Size="Size.Large"
+                                           OnClick="NuevaReserva">
+                                    Nueva Reserva
+                                </MudButton>
+                            </div>
+                        </div>
+                    </div>
+
+                    <MudTable Items="@listaReservaDto"
+                              Dense="false"
+                              Striped="true"
+                              Bordered="true"
+                              Hover="true"
+                              Filter="new Func<LisReservaResponseDto, bool>(FilterFunc1)"
+                              @bind-SelectedItem="selectedItem1"
+                              Loading="@_loading"
+                              LoadingProgressColor="Color.Info"
+                              Elevation="2">
+                        <ToolBarContent>
+                            <MudTextField @bind-Value="searchString1"
+                                          Placeholder="Buscar por DNI, Estado o Motivo..."
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Material.Filled.Search"
+                                          IconSize="Size.Medium"
+                                          Variant="Variant.Outlined"
+                                          Margin="Margin.Dense"
+                                          Clearable="true">
+                            </MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>DNI</MudTh>
+                            <MudTh>Fecha Reserva</MudTh>
+                            <MudTh>Fecha Atención</MudTh>
+                            <MudTh>Hora Atención</MudTh>
+                            <MudTh>Estado</MudTh>
+                            <MudTh>Motivo</MudTh>
+                            <MudTh>Acciones</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="reserva">
+                            <MudTd>@reserva.Dni</MudTd>
+                            <MudTd>@reserva.FechaReserva.ToString("yyyy-MM-dd")</MudTd>
+                            <MudTd>@reserva.FechaAtencion.ToString("yyyy-MM-dd")</MudTd>
+                            <MudTd>@reserva.HoraAtencion.Split('.')[0]</MudTd>
+                            <MudTd>
+                                <MudChip Color="Color.Info">@reserva.EstadoReserva</MudChip>
+                            </MudTd>
+                            <MudTd>
+                                <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    @reserva.MotivoConsulta
+                                </MudText>
+                            </MudTd>
+                            <MudTd>
+                                <MudButtonGroup>
+                                    <MudTooltip Text="Editar Reserva">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                       Color="Color.Primary"
+                                                       Size="Size.Small"
+                                                       OnClick="@(() => AbrirEditarReserva(reserva))" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Eliminar">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                       Color="Color.Error"
+                                                       Size="Size.Small"
+                                                       OnClick="@(() => MostrarDetalle())" />
+                                    </MudTooltip>
+                                </MudButtonGroup>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50 }"
+                                           RowsPerPageString="Filas por página"
+                                           InfoFormat="Mostrando {first_item}-{last_item} de {all_items}" />
+                        </PagerContent>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudContainer>
+}

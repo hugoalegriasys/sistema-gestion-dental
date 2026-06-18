@@ -1,0 +1,95 @@
+﻿@inherits ModalReservaBase
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@objReserva">
+            <MudPaper Class="pa-6">
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="objReserva.Dni"
+                                      Label="DNI del Paciente"
+                                      Required="true"
+                                      RequiredError="Este campo es obligatorio"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      MaxLength="8"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Badge" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="objReserva.EstadoReserva"
+                                      Label="Estado de la Reserva"
+                                      Required="true"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Info" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <MudDatePicker @bind-Value="objReserva.FechaReserva"
+                                       Label="Fecha de Reserva"
+                                       Required="true"
+                                       Margin="Margin.Dense"
+                                       Variant="Variant.Outlined"
+                                       AdornmentIcon="@Icons.Material.Filled.CalendarToday" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <MudDatePicker @bind-Value="objReserva.FechaAtencion"
+                                       Label="Fecha de Atención"
+                                       Required="true"
+                                       Margin="Margin.Dense"
+                                       Variant="Variant.Outlined"
+                                       AdornmentIcon="@Icons.Material.Filled.Event" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <MudTimePicker @bind-Value="objReserva.HoraAtencion"
+                                       Label="Hora de Atención"
+                                       Required="true"
+                                       Margin="Margin.Dense"
+                                       Variant="Variant.Outlined"
+                                       AdornmentIcon="@Icons.Material.Filled.AccessTime" />
+
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="objReserva.MotivoConsulta"
+                                      Label="Motivo de Consulta"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      Lines="2"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.MedicalInformation" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="objReserva.Observaciones"
+                                      Label="Observaciones"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      Lines="3"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Notes" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </EditForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   OnClick="MostrarConfirmacion">
+            Guardar
+        </MudButton>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Default"
+                   StartIcon="@Icons.Material.Filled.Cancel"
+                   OnClick="Cancel">
+            Cancelar
+        </MudButton>
+    </DialogActions>
+</MudDialog>

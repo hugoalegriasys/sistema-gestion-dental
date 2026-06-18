@@ -1,0 +1,6 @@
+@NGsystem.Dents.Api_HostAddress = http://localhost:5245
+
+GET {{NGsystem.Dents.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,33 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.userprefs
+*.suo
+*.sln.docstates
+.vs/
+*.DotSettings
+*.nupkg
+[Dd]ebug/
+[Rr]elease/
+[Pp]ackages/
+*.log
+*.tmp
+
+# ASP.NET / Blazor
+appsettings.Development.json
+wwwroot/_framework/
+wwwroot/_content/
+
+# IDE
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+packages/
+*.zip
+*.nuget.props
+*.nuget.targets

@@ -1,0 +1,24 @@
+﻿AllowedHosts: "*"
+PathBase: "/customer-management/account-recovery/v1"
+Application:
+  Name: "${Info:Project:ArtifactId}"
+Info:
+  Project:
+    Name: Business Account Recovery V1
+    Description: API BS Account Recovery V1, xxxx.
+    Version: 1.0.0
+    Type: business
+    ArtifactId: business-account-recovery-procedure
+    AppGroup: nego
+Authorization:
+  Enabled: true
+  AllowedScopes:
+  - bs-account-recovery-v1
+ConnectionStrings:
+  #DefaultConnection: Data Source=(Localdb)\MSSQLLocalDB;Initial Catalog=BDEU2APPNEGOD01;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=False;
+  DefaultConnection: Server=localhost;Database=DentalClinic;Trusted_Connection=True;
+custom-errors: 
+Http:
+  Header:Additionals: null
+  Clients: null
+ 
