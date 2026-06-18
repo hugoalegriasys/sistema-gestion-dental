@@ -66,28 +66,28 @@ else
                             <MudTh>Motivo</MudTh>
                             <MudTh>Acciones</MudTh>
                         </HeaderContent>
-                        <RowTemplate Context="reserva">
-                            <MudTd>@reserva.Dni</MudTd>
-                            <MudTd>@reserva.FechaReserva</MudTd>
-                            <MudTd>@reserva.FechaAtencion</MudTd>
-                            <MudTd>@(reserva.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
+                        <RowTemplate>
+                            <MudTd>@context.Dni</MudTd>
+                            <MudTd>@context.FechaReserva</MudTd>
+                            <MudTd>@context.FechaAtencion</MudTd>
+                            <MudTd>@(context.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
                             <MudTd>
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                                     <ActivatorContent>
-                                        <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>
+                                        <MudChip Color="@GetEstadoColor(context.EstadoReserva)" Size="Size.Small">@context.EstadoReserva</MudChip>
                                     </ActivatorContent>
                                     <ChildContent>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Confirmada"))">Confirmada</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Pendiente"))">Pendiente</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Cancelada"))">Cancelada</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Atendida"))">Atendida</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(reserva, "Reprogramada"))">Reprogramada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Confirmada"))">Confirmada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Pendiente"))">Pendiente</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Cancelada"))">Cancelada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Atendida"))">Atendida</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Reprogramada"))">Reprogramada</MudMenuItem>
                                     </ChildContent>
                                 </MudMenu>
                             </MudTd>
                             <MudTd>
                                 <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    @reserva.MotivoConsulta
+                                    @context.MotivoConsulta
                                 </MudText>
                             </MudTd>
                             <MudTd>
