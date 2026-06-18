@@ -1,0 +1,43 @@
+@page "/paciente/{Id:int}"
+@using Ngsystem.FrontDentis.Components
+@inherits PacientePerfilBase
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-8 pb-16">
+    @if (_loading)
+    {
+        <div class="d-flex justify-center pa-16">
+            <MudProgressCircular Color="Color.Info" Indeterminate="true" Size="Size.Large" />
+        </div>
+    }
+    else
+    {
+        <MudPaper Elevation="3" Class="pa-6" Style="min-height: 80vh;">
+            <MudGrid>
+                <MudItem xs="12">
+                    <div class="d-flex align-center justify-space-between flex-wrap mb-6">
+                        <MudText Typo="Typo.h4" Color="Color.Primary">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Class="mr-2" />
+                            Odontograma de @_nombrePaciente @_apellidoPaciente
+                        </MudText>
+                        <div class="d-flex align-center ga-4">
+                            <MudChip Color="Color.Info" Size="Size.Small" Class="mr-2">
+                                <MudIcon Icon="@Icons.Material.Filled.Badge" Size="Size.Small" Class="mr-1" />
+                                DNI: @_dniPaciente
+                            </MudChip>
+                            <MudButton Variant="Variant.Outlined"
+                                       StartIcon="@Icons.Material.Filled.ArrowBack"
+                                       Color="Color.Default"
+                                       OnClick="VolverLista">
+                                Volver a lista
+                            </MudButton>
+                        </div>
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <OdontogramaUI IdPaciente="@Id" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    }
+</MudContainer>

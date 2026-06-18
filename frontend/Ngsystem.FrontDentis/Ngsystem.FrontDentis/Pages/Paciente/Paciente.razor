@@ -147,17 +147,16 @@ else
                                                        Size="Size.Small"
                                                        OnClick="@(() => AbrirEditarPacientes(paciente))" />
                                     </MudTooltip>
-                                    <MudTooltip Text="Ver Detalles">
+                                    <MudTooltip Text="Odontograma y perfil">
                                         <MudIconButton Icon="@Icons.Material.Filled.Visibility"
                                                        Color="Color.Info"
                                                        Size="Size.Small"
-                                                       OnClick="@(() => MostrarDetalle())" />
+                                                       OnClick="@(() => NavegarDetalle(paciente.Id ?? 0))" />
                                     </MudTooltip>
                                     <MudTooltip Text="Eliminar">
                                         <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                        Color="Color.Error"
-                                                       Size="Size.Small"
-                                                       OnClick="@(() => MostrarDetalle())" />
+                                                       Size="Size.Small" />
                                     </MudTooltip>
                                 </MudButtonGroup>
                             </MudTd>

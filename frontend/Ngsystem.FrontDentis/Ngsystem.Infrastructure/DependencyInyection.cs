@@ -16,8 +16,7 @@ public static class DependencyInyection
         //var baseUrls = configuration.GetSection(BaseUrlConfiguration.CONFIG_NAME).<BaseUrlConfiguration>();
         services.AddRefitClient<IPaciente>().ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
         services.AddRefitClient<IReserva>().ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
-
-
+        services.AddRefitClient<IOdontograma>().ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
 
         return services;
     }

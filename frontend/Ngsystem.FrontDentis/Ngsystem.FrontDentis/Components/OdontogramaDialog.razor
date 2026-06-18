@@ -1,0 +1,53 @@
+@inherits OdontogramaDialogBase
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.MedicalServices" Class="mr-2" />
+            Editar Diente @NumeroDiente
+        </MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudSelect @bind-Value="nuevoEstado"
+                           Label="Estado del diente"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Required="true"
+                           RequiredError="Seleccione un estado"
+                           AdornmentIcon="@Icons.Material.Filled.MedicalServices">
+                    @foreach (var est in EstadosValidos)
+                    {
+                        <MudSelectItem Value="@est">@est</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudTextField @bind-Value="nuevasObservaciones"
+                              Label="Observaciones"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              Lines="3"
+                              AdornmentIcon="@Icons.Material.Filled.Notes"
+                              Placeholder="Notas adicionales sobre el diente..." />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Default"
+                   OnClick="Cancelar">
+            Cancelar
+        </MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   OnClick="Guardar">
+            Guardar
+        </MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,0 +1,284 @@
+@using MudBlazor
+@using Ngsystem.Infrastructure.Dtos
+@using Ngsystem.Infrastructure.Infrastructure.Http
+@using Microsoft.AspNetCore.Components.Rendering
+
+<div class="odontograma-wrapper">
+    @* ─── Leyenda ─── *@
+    <div class="odontograma-leyenda">
+        <span class="leyenda-item"><span class="color-swatch swatch-amalgama"></span>Amalgama</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-caries"></span>Caries</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-endodoncia"></span>Endodoncia</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-ausente"></span>Ausente</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-resina"></span>Resina</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-implante"></span>Implante</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-sellante"></span>Sellante</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-corona"></span>Corona</span>
+        <span class="leyenda-item"><span class="color-swatch swatch-normal"></span>Normal</span>
+    </div>
+
+    @* ─── Filtro ─── *@
+    <div class="odontograma-filtro">
+        <MudRadioGroup T="int" @bind-SelectedOption="TipoSeleccionado" Inline="true" Color="Color.Primary">
+            <MudRadio Color="Color.Primary" Option="@(1)">Permanente</MudRadio>
+            <MudRadio Color="Color.Primary" Option="@(2)">Decidua</MudRadio>
+            <MudRadio Color="Color.Primary" Option="@(3)">Mixta</MudRadio>
+        </MudRadioGroup>
+    </div>
+
+    @* ─── Arcada Superior ─── *@
+    <div class="odontograma-arcada">
+        <span class="arcada-label">Superior</span>
+        <div class="odontograma-fila">
+            @foreach (var tooth in ArcadaSuperior)
+            {
+                @RenderTooth(tooth)
+            }
+        </div>
+    </div>
+
+    @* ─── Arcada Inferior ─── *@
+    <div class="odontograma-arcada">
+        <span class="arcada-label">Inferior</span>
+        <div class="odontograma-fila">
+            @foreach (var tooth in ArcadaInferior)
+            {
+                @RenderTooth(tooth)
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject] private IOdontograma OdontogramaService { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
+
+    [Parameter] public int IdPaciente { get; set; }
+
+    private const int AMALGAMA = 1, CARIES = 2, ENDODONCIA = 3, AUSENTE = 4,
+                     RESINA = 5, IMPLANTE = 6, SELLANTE = 7, CORONA = 8, NORMAL = 9;
+
+    private static readonly int[] Globales = { ENDODONCIA, AUSENTE, IMPLANTE, CORONA };
+
+    private static readonly int[] Sup = { 18,17,16,15,14,13,12,11, 21,22,23,24,25,26,27,28 };
+    private static readonly int[] Inf = { 48,47,46,45,44,43,42,41, 31,32,33,34,35,36,37,38 };
+
+    private class Diente
+    {
+        public int Fdi;
+        public bool Perm, Dec;
+        public bool Disabled;
+        public int? Global;
+        public Dictionary<int, int> Caras = new();
+        public string Obs = "";
+    }
+
+    private List<Diente> ArcadaSuperior = new();
+    private List<Diente> ArcadaInferior = new();
+    private int TipoSeleccionado = 1;
+
+    protected override void OnInitialized()
+    {
+        ArcadaSuperior = Sup.Select(f => new Diente { Fdi = f, Perm = f <= 48, Dec = f >= 51 }).ToList();
+        ArcadaInferior = Inf.Select(f => new Diente { Fdi = f, Perm = f <= 48, Dec = f >= 51 }).ToList();
+        AplicarFiltro();
+    }
+
+    protected override async Task OnInitializedAsync() => await CargarDatos();
+
+    private static int Str2Int(string? e) => (e ?? "Sano") switch
+    {
+        "Sano" => 9, "Caries" => 2, "Tratado" => 5,
+        "Extraido" or "Extraído" or "Ausente" => 4,
+        "Endodoncia" => 3, _ => 9
+    };
+
+    private static string Int2Str(int e) => e switch
+    {
+        1 or 5 or 6 or 7 or 8 => "Tratado", 2 => "Caries",
+        3 => "Endodoncia", 4 => "Ausente", _ => "Sano"
+    };
+
+    private async Task CargarDatos()
+    {
+        try
+        {
+            foreach (var t in ArcadaSuperior.Concat(ArcadaInferior))
+            {
+                t.Global = null; t.Caras.Clear(); t.Obs = "";
+            }
+
+            var res = await OdontogramaService.ListaOdontograma(IdPaciente);
+            if (res is { Status: true, Lista: not null })
+            {
+                foreach (var item in res.Lista)
+                {
+                    var d = ArcadaSuperior.Concat(ArcadaInferior)
+                        .FirstOrDefault(x => x.Fdi == item.NumeroDiente);
+                    if (d is null) continue;
+
+                    var est = Str2Int(item.EstadoDiente);
+                    d.Obs = item.Observaciones ?? "";
+
+                    if (Globales.Contains(est)) { d.Global = est; d.Caras.Clear(); }
+                    else if (est != 9) { d.Global = null; d.Caras[5] = est; }
+                }
+            }
+        }
+        catch (Exception ex) { Snackbar.Add($"Error: {ex.Message}", Severity.Error); }
+        finally { AplicarFiltro(); StateHasChanged(); }
+    }
+
+    private void AplicarFiltro()
+    {
+        foreach (var d in ArcadaSuperior.Concat(ArcadaInferior))
+        {
+            d.Disabled = TipoSeleccionado == 1 ? !d.Perm
+                       : TipoSeleccionado == 2 ? !d.Dec
+                       : false;
+            if (d.Disabled) { d.Global = null; d.Caras.Clear(); d.Obs = ""; }
+        }
+    }
+
+    private async Task ClickCara(Diente d, int c) { if (!d.Disabled) await AbrirDialog(d); }
+    private async Task ClickDiente(Diente d) { if (!d.Disabled) await AbrirDialog(d); }
+
+    private async Task AbrirDialog(Diente d)
+    {
+        var estado = d.Global.HasValue ? Int2Str(d.Global.Value)
+            : d.Caras.Count > 0 ? Int2Str(d.Caras.Values.First()) : "Sano";
+
+        var r = await DialogService.Show<OdontogramaDialog>($"Diente {d.Fdi}",
+            new DialogParameters
+            {
+                ["NumeroDiente"] = d.Fdi,
+                ["EstadoActual"] = estado,
+                ["ObservacionesActual"] = d.Obs
+            },
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = true }
+        ).Result;
+
+        if (r.Canceled || r.Data is not OdontogramaDialogResult data) return;
+
+        try
+        {
+            var sv = await OdontogramaService.GuardarOdontograma(
+                new SaveOdontogramaRequestDto
+                {
+                    IdPaciente = IdPaciente,
+                    NumeroDiente = d.Fdi,
+                    EstadoDiente = data.NuevoEstado,
+                    Observaciones = data.NuevasObservaciones
+                });
+
+            if (sv is { Status: true })
+            {
+                Snackbar.Add($"Diente {d.Fdi} → {data.NuevoEstado}",
+                    Severity.Success, c => c.VisibleStateDuration = 2000);
+                await CargarDatos();
+            }
+            else Snackbar.Add("Error al guardar", Severity.Error);
+        }
+        catch (Exception ex) { Snackbar.Add($"Error: {ex.Message}", Severity.Error); }
+    }
+
+    private RenderFragment RenderTooth(Diente d) => b =>
+    {
+        var dis = d.Disabled ? " tooth-disabled" : "";
+
+        b.OpenElement(0, "div");
+        b.AddAttribute(1, "class", $"tooth-cell{dis}");
+        b.AddAttribute(2, "title", $"Diente {d.Fdi}");
+
+        b.OpenElement(3, "svg");
+        b.AddAttribute(4, "viewBox", "0 0 50 50");
+        b.AddAttribute(5, "class", "tooth-svg");
+        if (!d.Disabled)
+            b.AddAttribute(6, "onclick", EventCallback.Factory.Create(this, () => ClickDiente(d)));
+
+        RF(b, d, 1, "10,10 50,10 40,20 20,20");
+        RF(b, d, 2, "50,10 50,50 40,40 40,20");
+        RF(b, d, 3, "50,50 10,50 20,40 40,40");
+        RF(b, d, 4, "10,50 20,40 20,20 10,10");
+        RF(b, d, 5, "20,20 40,20 40,40 20,40");
+
+        if (d.Global == CORONA)
+        {
+            b.OpenElement(10, "circle");
+            b.AddAttribute(11, "cx", "30"); b.AddAttribute(12, "cy", "30");
+            b.AddAttribute(13, "r", "16");
+            b.AddAttribute(14, "class", CC(8, d.Disabled));
+            b.CloseElement();
+        }
+
+        if (d.Global == ENDODONCIA)
+        {
+            b.OpenElement(15, "circle");
+            b.AddAttribute(16, "cx", "30"); b.AddAttribute(17, "cy", "30");
+            b.AddAttribute(18, "r", "20");
+            b.AddAttribute(19, "class", CC(3, d.Disabled));
+            b.CloseElement();
+        }
+
+        if (d.Global == AUSENTE)
+        {
+            b.OpenElement(20, "polygon");
+            b.AddAttribute(21, "points", "10,15 15,10 50,45 45,50");
+            b.AddAttribute(22, "class", CC(4, d.Disabled));
+            b.CloseElement();
+
+            b.OpenElement(23, "polygon");
+            b.AddAttribute(24, "points", "45,10 50,15 15,50 10,45");
+            b.AddAttribute(25, "class", CC(4, d.Disabled));
+            b.CloseElement();
+        }
+
+        if (d.Global == IMPLANTE)
+        {
+            b.OpenElement(26, "polygon");
+            b.AddAttribute(27, "points",
+                "50,10 40,10 10,26 10,32 46,32 10,50 20,50 50,36 50,28 14,28");
+            b.AddAttribute(28, "class", CC(6, d.Disabled));
+            b.CloseElement();
+        }
+
+        b.OpenElement(30, "text");
+        b.AddAttribute(31, "x", "25"); b.AddAttribute(32, "y", "47");
+        b.AddAttribute(33, "text-anchor", "middle");
+        b.AddAttribute(34, "class", "tooth-number");
+        b.AddContent(35, d.Fdi);
+        b.CloseElement();
+
+        b.CloseElement();
+        b.CloseElement();
+    };
+
+    private void RF(RenderTreeBuilder b, Diente d, int c, string pts)
+    {
+        var est = d.Caras.TryGetValue(c, out var v) ? v : (int?)null;
+        var cls = est.HasValue ? CC(est.Value, d.Disabled) : "tooth-face";
+
+        b.OpenElement(100 + c * 10, "polygon");
+        b.AddAttribute(101 + c * 10, "points", pts);
+        b.AddAttribute(102 + c * 10, "class", cls);
+        if (!d.Disabled && !d.Global.HasValue)
+            b.AddAttribute(103 + c * 10, "onclick",
+                EventCallback.Factory.Create(this, () => ClickCara(d, c)));
+        b.CloseElement();
+    }
+
+    private static string CC(int est, bool dis)
+    {
+        if (dis) return "tooth-face tooth-disabled-face";
+        return est switch
+        {
+            1 => "tooth-face face-amalgama",   2 => "tooth-face face-caries",
+            3 => "tooth-face face-endodoncia", 4 => "tooth-face face-ausente",
+            5 => "tooth-face face-resina",     6 => "tooth-face face-implante",
+            7 => "tooth-face face-sellante",   8 => "tooth-face face-corona",
+            _ => "tooth-face"
+        };
+    }
+}

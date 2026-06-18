@@ -17,33 +17,30 @@ public class ModalReservaBase : ComponentBase
 
     public DateTime fechaReserva = DateTime.Today;
     public DateTime fechaAtencion = DateTime.Today;
-    public string horaFormateada = string.Empty;
-    public string horaAtencion = string.Empty;
-    //string horaFormateada = hora.ToString(@"hh\:mm\:ss");
+    public TimeSpan? horaAtencion = null;
+
     protected override void OnInitialized()
     {
-        if (objReserva.FechaReserva != default)     
+        if (objReserva.FechaReserva != default)
             fechaReserva = objReserva.FechaReserva;
 
         if (objReserva.FechaAtencion != default)
             fechaAtencion = objReserva.FechaAtencion;
 
-        if (objReserva.HoraAtencion != default)
-            horaFormateada = objReserva.HoraAtencion;
-            horaAtencion = horaFormateada.Split('.')[0]; 
+        if (!string.IsNullOrWhiteSpace(objReserva.HoraAtencion))
+        {
+            var clean = objReserva.HoraAtencion.Split('.')[0];
+            if (TimeSpan.TryParse(clean, out var ts))
+                horaAtencion = ts;
+        }
     }
 
     public void Cancel() => MudDialog.Cancel();
 
     public async Task MostrarConfirmacion()
     {
-        // Validaciones simples
         if (string.IsNullOrWhiteSpace(objReserva.Dni) || string.IsNullOrWhiteSpace(objReserva.EstadoReserva))
             return;
-
-        objReserva.FechaReserva = fechaReserva;
-        objReserva.FechaAtencion = fechaAtencion;
-        objReserva.HoraAtencion = horaAtencion;
 
         var confirmDialog = _dialogServicio.Show<ModalDialog>("Confirmar", new DialogParameters
         {
@@ -53,25 +50,35 @@ public class ModalReservaBase : ComponentBase
         var result = await confirmDialog.Result;
 
         if (!result.Canceled)
-        {
             await Guardar();
-        }
     }
 
     public async Task Guardar()
     {
-        bool exito = false;
-        string mensaje = "";
+        bool exito;
+        string mensaje;
+
+        var request = new SaveReservaRequestDto
+        {
+            IdPaciente = objReserva.IdPaciente > 0 ? objReserva.IdPaciente : 0,
+            EstadoReserva = objReserva.EstadoReserva ?? string.Empty,
+            FechaReserva = fechaReserva.ToString("dd/MM/yyyy"),
+            FechaAtencion = fechaAtencion.ToString("dd/MM/yyyy"),
+            HoraAtencion = horaAtencion?.ToString(@"hh\:mm") ?? string.Empty,
+            MotivoConsulta = objReserva.MotivoConsulta ?? string.Empty,
+            Observaciones = objReserva.Observaciones,
+            Dni = objReserva.Dni
+        };
 
         if (objReserva.IdReserva == 0)
         {
-            var response = await _reservaServicio.GrabarReserva(objReserva);
+            var response = await _reservaServicio.GrabarReserva(request);
             exito = response.Status;
             mensaje = "Reserva registrada correctamente";
         }
         else
         {
-            var response = await _reservaServicio.UpdateReserva(objReserva);
+            var response = await _reservaServicio.UpdateReserva(request);
             exito = response.Status;
             mensaje = "Reserva actualizada correctamente";
         }

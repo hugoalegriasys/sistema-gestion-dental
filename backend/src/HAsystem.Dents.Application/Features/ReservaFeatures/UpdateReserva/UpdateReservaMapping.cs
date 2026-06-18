@@ -9,10 +9,11 @@ public static class UpdateReservaMapping
         reserva.Update(
         request.IdPaciente,
         request.EstadoReserva,
-        request.EstadoReserva,
+        request.FechaReserva,
         request.FechaAtencion,
         request.HoraAtencion,
         request.MotivoConsulta,
+        request.Dni,
         request.Observaciones
         );
     }

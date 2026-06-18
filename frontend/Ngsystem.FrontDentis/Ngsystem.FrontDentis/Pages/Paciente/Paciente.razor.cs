@@ -10,6 +10,7 @@ namespace Ngsystem.FrontDentis.Pages.Paciente
         [Inject] IPaciente? _listaPaciente { get; set; }
         [Inject] IDialogService? _dialogServicio { get; set; }
         [Inject] ISnackbar? _snackBar { get; set; }
+        [Inject] NavigationManager? _navigation { get; set; }
 
         public string searchString1 = "";
         public LisPacienteResponseDto selectedItem1 = null;
@@ -51,9 +52,9 @@ namespace Ngsystem.FrontDentis.Pages.Paciente
             }
         }
 
-        public async Task MostrarDetalle()
+        public void NavegarDetalle(int idPaciente)
         {
-            _snackBar?.Add("Funcionalidad en desarrollo", Severity.Info);
+            _navigation?.NavigateTo($"/paciente/{idPaciente}");
         }
 
         public async Task NuevoPaciente()
