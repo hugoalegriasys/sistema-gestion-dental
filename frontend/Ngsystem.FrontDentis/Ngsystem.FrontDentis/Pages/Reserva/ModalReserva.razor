@@ -17,13 +17,19 @@
                     </MudItem>
 
                     <MudItem xs="12" md="6">
-                        <MudTextField @bind-Value="objReserva.EstadoReserva"
-                                      Label="Estado de la Reserva"
-                                      Required="true"
-                                      Variant="Variant.Outlined"
-                                      Margin="Margin.Dense"
-                                      Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Info" />
+                        <MudSelect @bind-Value="objReserva.EstadoReserva"
+                                   Label="Estado de la Reserva"
+                                   Required="true"
+                                   RequiredError="Seleccione un estado"
+                                   Variant="Variant.Outlined"
+                                   Margin="Margin.Dense"
+                                   AdornmentIcon="@Icons.Material.Filled.Info">
+                            <MudSelectItem Value="Confirmada">Confirmada</MudSelectItem>
+                            <MudSelectItem Value="Pendiente">Pendiente</MudSelectItem>
+                            <MudSelectItem Value="Cancelada">Cancelada</MudSelectItem>
+                            <MudSelectItem Value="Atendida">Atendida</MudSelectItem>
+                            <MudSelectItem Value="Reprogramada">Reprogramada</MudSelectItem>
+                        </MudSelect>
                     </MudItem>
 
                     <MudItem xs="12" md="6">

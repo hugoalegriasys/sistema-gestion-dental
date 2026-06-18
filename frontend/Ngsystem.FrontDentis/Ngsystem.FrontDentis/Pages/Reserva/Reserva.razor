@@ -72,7 +72,16 @@ else
                             <MudTd>@reserva.FechaAtencion</MudTd>
                             <MudTd>@(reserva.HoraAtencion?.Split('.')[0] ?? "-")</MudTd>
                             <MudTd>
-                                <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>
+                                <MudMenu Direction="Direction.Bottom" OffsetX="true" FullWidth="false">
+                                    <ActivatorContent>
+                                        <MudChip Color="@GetEstadoColor(reserva.EstadoReserva)" Size="Size.Small">@reserva.EstadoReserva</MudChip>
+                                    </ActivatorContent>
+                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Confirmada"))">Confirmada</MudMenuItem>
+                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Pendiente"))">Pendiente</MudMenuItem>
+                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Cancelada"))">Cancelada</MudMenuItem>
+                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Atendida"))">Atendida</MudMenuItem>
+                                    <MudMenuItem OnClick="@(() => CambiarEstadoRapido(reserva, "Reprogramada"))">Reprogramada</MudMenuItem>
+                                </MudMenu>
                             </MudTd>
                             <MudTd>
                                 <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -80,20 +89,12 @@ else
                                 </MudText>
                             </MudTd>
                             <MudTd>
-                                <MudButtonGroup>
-                                    <MudTooltip Text="Editar Reserva">
-                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                                                       Color="Color.Primary"
-                                                       Size="Size.Small"
-                                                       OnClick="@(() => AbrirEditarReserva(reserva))" />
-                                    </MudTooltip>
-                                    <MudTooltip Text="Eliminar">
-                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                                       Color="Color.Error"
-                                                       Size="Size.Small"
-                                                       OnClick="@(() => MostrarDetalle())" />
-                                    </MudTooltip>
-                                </MudButtonGroup>
+                                <MudTooltip Text="Eliminar">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                   Color="Color.Error"
+                                                   Size="Size.Small"
+                                                   OnClick="@(() => MostrarDetalle())" />
+                                </MudTooltip>
                             </MudTd>
                         </RowTemplate>
                         <PagerContent>

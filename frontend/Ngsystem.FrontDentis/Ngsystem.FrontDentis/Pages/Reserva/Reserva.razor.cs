@@ -95,5 +95,38 @@ namespace Ngsystem.FrontDentis.Pages.Reserva
             "Reprogramada" => Color.Info,
             _            => Color.Default
         };
+
+        public async Task CambiarEstadoRapido(LisReservaResponseDto reserva, string nuevoEstado)
+        {
+            var request = new SaveReservaRequestDto
+            {
+                IdPaciente = reserva.IdPaciente,
+                EstadoReserva = nuevoEstado,
+                FechaReserva = reserva.FechaReserva ?? string.Empty,
+                FechaAtencion = reserva.FechaAtencion ?? string.Empty,
+                HoraAtencion = reserva.HoraAtencion ?? string.Empty,
+                MotivoConsulta = reserva.MotivoConsulta ?? string.Empty,
+                Observaciones = reserva.Observaciones,
+                Dni = reserva.Dni
+            };
+
+            try
+            {
+                var response = await _reservaServicio.UpdateReserva(request);
+                if (response.Status)
+                {
+                    reserva.EstadoReserva = nuevoEstado;
+                    _snackBar?.Add($"Estado actualizado a {nuevoEstado}", Severity.Success);
+                }
+                else
+                {
+                    _snackBar?.Add("Error al actualizar el estado", Severity.Error);
+                }
+            }
+            catch
+            {
+                _snackBar?.Add("Error de conexión al actualizar el estado", Severity.Error);
+            }
+        }
     }
 }
