@@ -1,20 +1,24 @@
-﻿
-using HAsystem.Dents.Domain.Aggregates.PacienteAggregates;
-using HAsystem.Dents.Domain.Aggregates.ReservaAggregates;
+using HAsystem.Dents.Domain.Aggregates.CitaAggregates;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HAsystem.Dents.Infrastructure.Persistence.Configurations;
-public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
-{
 
-    public void Configure(EntityTypeBuilder<Reserva> builder)
+public class CitaConfiguration : IEntityTypeConfiguration<Cita>
+{
+    public void Configure(EntityTypeBuilder<Cita> builder)
     {
-        builder.ToTable("Reserva");
+        builder.ToTable("Cita");
 
         builder.HasKey(e => e.Id);
 
         builder.Property(e => e.Id)
                .ValueGeneratedOnAdd()
+               .UsePropertyAccessMode(PropertyAccessMode.Field)
+               .HasColumnName("IdCita");
+
+        builder.Property(e => e.IdReserva)
+               .IsRequired()
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("IdReserva");
 
@@ -22,16 +26,6 @@ public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
                .IsRequired()
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("IdPaciente");
-
-        builder.Property(e => e.EstadoReserva)
-               .IsRequired()
-               .UsePropertyAccessMode(PropertyAccessMode.Field)
-               .HasColumnName("EstadoReserva");
-
-        builder.Property(e => e.FechaReserva)
-               .IsRequired()
-               .UsePropertyAccessMode(PropertyAccessMode.Field)
-               .HasColumnName("FechaReserva");
 
         builder.Property(e => e.FechaAtencion)
                .IsRequired()
@@ -44,27 +38,40 @@ public class ReservaConfiguration : IEntityTypeConfiguration<Reserva>
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("HoraAtencion");
 
-        builder.Property(e => e.MotivoConsulta)
+        builder.Property(e => e.EstadoCita)
                .IsRequired()
+               .HasMaxLength(50)
                .UsePropertyAccessMode(PropertyAccessMode.Field)
-               .HasColumnName("MotivoConsulta");
+               .HasColumnName("EstadoCita");
+
+        builder.Property(e => e.Diagnostico)
+               .HasMaxLength(500)
+               .UsePropertyAccessMode(PropertyAccessMode.Field)
+               .HasColumnName("Diagnostico");
+
+        builder.Property(e => e.TratamientoRealizado)
+               .HasMaxLength(500)
+               .UsePropertyAccessMode(PropertyAccessMode.Field)
+               .HasColumnName("TratamientoRealizado");
 
         builder.Property(e => e.Observaciones)
+               .HasMaxLength(1000)
                .UsePropertyAccessMode(PropertyAccessMode.Field)
                .HasColumnName("Observaciones");
 
-        builder.Property(e => e.Dni)
+        builder.Property(e => e.FechaRegistro)
                .IsRequired()
                .UsePropertyAccessMode(PropertyAccessMode.Field)
-               .HasColumnName("Dni");
+               .HasColumnName("FechaRegistro");
 
         builder.HasOne(e => e.Paciente)
-               .WithMany(p => p.Reservas)
+               .WithMany()
                .HasForeignKey(e => e.IdPaciente)
                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(e => e.Reserva)
+               .WithMany()
+               .HasForeignKey(e => e.IdReserva)
+               .OnDelete(DeleteBehavior.Restrict);
     }
-
 }
-
-
-

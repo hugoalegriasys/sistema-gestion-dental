@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using HAsystem.Dents.Application.Features.CitaFeatures.ListCita;
+using HAsystem.Dents.Application.Features.CitaFeatures.UpdateCita;
 using HAsystem.Dents.Application.Features.OdontogramaFeatures.GetOdontogramaByPacienteId;
 using HAsystem.Dents.Application.Features.OdontogramaFeatures.SaveOdontograma;
 using HAsystem.Dents.Application.Features.PacienteFeatures.CreatePaciente;
@@ -33,6 +35,9 @@ public static class DependencyInjection
 
         services.AddScoped<GetOdontogramaByPacienteIdHandler>();
         services.AddScoped<SaveOdontogramaHandler>();
+
+        services.AddScoped<ListCitaHandler>();
+        services.AddScoped<UpdateCitaHandler>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

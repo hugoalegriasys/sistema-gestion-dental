@@ -1,4 +1,6 @@
-﻿using HAsystem.Dents.Application.QueryServices;
+﻿using HAsystem.Dents.Application.Features.CitaFeatures;
+using HAsystem.Dents.Application.QueryServices;
+using HAsystem.Dents.Domain.Aggregates.CitaAggregates;
 using HAsystem.Dents.Domain.Aggregates.DiagnosticoTratamientoAggregates;
 using HAsystem.Dents.Domain.Aggregates.HistorialClinicoAggregates;
 using HAsystem.Dents.Domain.Aggregates.OdontogramaAggregates;
@@ -28,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<IHistorialClinicoRepository, HistorialClinicoRepository>();
         services.AddScoped<IDiagnosticoTratamientoRepository, DiagnosticoTratamientoRepository>();
         services.AddScoped<IOdontogramaRepository, OdontogramaRepository>();
+        services.AddScoped<ICitaRepository, CitaRepository>();
+        services.AddScoped<ICitaReadService, CitaRepository>();
 
         return services;
     }

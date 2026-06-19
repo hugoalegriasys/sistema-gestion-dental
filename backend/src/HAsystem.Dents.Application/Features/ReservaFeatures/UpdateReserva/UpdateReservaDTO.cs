@@ -1,11 +1,12 @@
 ﻿namespace HAsystem.Dents.Application.Features.ReservaFeacture.UpdateReserva;
 
 public record ReservaUpdateRequestDto(
+    int Id,
     int IdPaciente,
     string EstadoReserva,
-    string FechaReserva,
-    string FechaAtencion,
-    string HoraAtencion,
+    DateTime FechaReserva,
+    DateTime FechaAtencion,
+    TimeSpan HoraAtencion,
     string MotivoConsulta,
     string? Observaciones,
     string Dni

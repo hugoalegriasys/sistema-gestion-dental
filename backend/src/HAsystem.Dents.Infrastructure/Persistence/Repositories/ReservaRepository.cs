@@ -20,6 +20,7 @@ public class ReservaRepository : IReservaRepository, IReservaReadService
                         .AsQueryable();
 
         return await query.Select(reserva => new LisReservaResponseDto(
+             reserva.Id,
              reserva.IdPaciente,
              reserva.EstadoReserva,
              reserva.FechaReserva.ToString(),
@@ -45,7 +46,6 @@ public class ReservaRepository : IReservaRepository, IReservaReadService
     public async Task<Reserva?> GetIdReservaDtoAsync(int id)
     {
         return await _context.Reserva
-            .AsNoTracking()
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync();
     }

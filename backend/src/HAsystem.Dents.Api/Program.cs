@@ -40,4 +40,5 @@ app.UseMiddleware<ManejoExcepcionesMiddleware>();
 app.MapPacienteEndpoint();
 app.MapReservaEndpoint();
 app.MapOdontogramaEndpoint();
+app.MapCitaEndpoint();
 app.Run();

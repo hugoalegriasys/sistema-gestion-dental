@@ -12,16 +12,36 @@ namespace Ngsystem.FrontDentis.Pages.Paciente
         [Inject] ISnackbar? _snackBar { get; set; }
         [Inject] NavigationManager? _navigation { get; set; }
 
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "action")]
+        public string? Action { get; set; }
+
         public string searchString1 = "";
         public LisPacienteResponseDto selectedItem1 = null;
         public bool _loading = false;
         public bool estadoLoad = false;
+        private bool _pendienteNuevo = false;
 
         public IEnumerable<LisPacienteResponseDto>? listaPacienteDto { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await CargaLista();
+        }
+
+        protected override void OnParametersSet()
+        {
+            if (Action == "nuevo")
+                _pendienteNuevo = true;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (_pendienteNuevo)
+            {
+                _pendienteNuevo = false;
+                await NuevoPaciente();
+            }
         }
 
         public async Task CargaLista()

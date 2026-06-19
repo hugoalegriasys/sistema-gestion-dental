@@ -1,7 +1,7 @@
-﻿@page "/Reserva/Reserva"
+@page "/Citas/Cita"
 @using Ngsystem.FrontDentis.Components
 @using Ngsystem.Infrastructure.Dtos
-@inherits ReservaBase
+@inherits CitaBase
 
 @if (estadoLoad)
 {
@@ -16,39 +16,28 @@ else
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <MudText Typo="Typo.h4" GutterBottom="true" Color="Color.Primary">
-                                <MudIcon Icon="@Icons.Material.Filled.EventNote" Class="mr-2" />
-                                Gestión de Reservas
+                                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Class="mr-2" />
+                                Agenda de Citas
                             </MudText>
                             <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                Total de reservas: @(listaReservaDto?.Count() ?? 0)
+                                Total de citas: @(listaCitaDto?.Count() ?? 0)
                             </MudText>
-                        </div>
-                        <div class="col-md-6">
-                            <div style="text-align: right;">
-                                <MudButton Variant="Variant.Filled"
-                                           StartIcon="@Icons.Material.Filled.Add"
-                                           Color="Color.Primary"
-                                           Size="Size.Large"
-                                           OnClick="NuevaReserva">
-                                    Nueva Reserva
-                                </MudButton>
-                            </div>
                         </div>
                     </div>
 
-                    <MudTable Items="@listaReservaDto"
+                    <MudTable Items="@listaCitaDto"
                               Dense="false"
                               Striped="true"
                               Bordered="true"
                               Hover="true"
-                              Filter="new Func<LisReservaResponseDto, bool>(FilterFunc1)"
+                              Filter="new Func<CitaResponseDto, bool>(FilterFunc1)"
                               @bind-SelectedItem="selectedItem1"
                               Loading="@_loading"
                               LoadingProgressColor="Color.Info"
                               Elevation="2">
                         <ToolBarContent>
                             <MudTextField @bind-Value="searchString1"
-                                          Placeholder="Buscar por DNI, Estado o Motivo..."
+                                          Placeholder="Buscar por DNI, Nombre, Apellido o Estado..."
                                           Adornment="Adornment.Start"
                                           AdornmentIcon="@Icons.Material.Filled.Search"
                                           IconSize="Size.Medium"
@@ -59,42 +48,38 @@ else
                         </ToolBarContent>
                         <HeaderContent>
                             <MudTh>DNI</MudTh>
-                            <MudTh>Fecha Reserva</MudTh>
-                            <MudTh>Fecha Atención</MudTh>
-                            <MudTh>Hora Atención</MudTh>
+                            <MudTh>Nombre</MudTh>
+                            <MudTh>Apellido</MudTh>
+                            <MudTh>Fecha</MudTh>
+                            <MudTh>Hora</MudTh>
                             <MudTh>Estado</MudTh>
-                            <MudTh>Motivo</MudTh>
                             <MudTh>Acciones</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd>@context.Dni</MudTd>
-                            <MudTd>@context.FechaReserva?.ToString("dd/MM/yyyy")</MudTd>
+                            <MudTd>@context.DniPaciente</MudTd>
+                            <MudTd>@context.NombresPaciente</MudTd>
+                            <MudTd>@context.ApellidosPaciente</MudTd>
                             <MudTd>@context.FechaAtencion?.ToString("dd/MM/yyyy")</MudTd>
                             <MudTd>@(context.HoraAtencion?.ToString(@"hh\:mm") ?? "-")</MudTd>
                             <MudTd>
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                                     <ActivatorContent>
-                                        <MudChip Color="@GetEstadoColor(context.EstadoReserva)" Size="Size.Small">@context.EstadoReserva</MudChip>
+                                        <MudChip Color="@GetEstadoColor(context.EstadoCita)" Size="Size.Small">@context.EstadoCita</MudChip>
                                     </ActivatorContent>
                                     <ChildContent>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Confirmada"))">Confirmada</MudMenuItem>
                                         <MudMenuItem OnClick="@(() => CambiarEstado(context, "Pendiente"))">Pendiente</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Cancelada"))">Cancelada</MudMenuItem>
-                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Reprogramada"))">Reprogramada</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "En Atención"))">En Atención</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "Atendida"))">Atendida</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => CambiarEstado(context, "No Asistió"))">No Asistió</MudMenuItem>
                                     </ChildContent>
                                 </MudMenu>
                             </MudTd>
                             <MudTd>
-                                <MudText Typo="Typo.body2" Style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    @context.MotivoConsulta
-                                </MudText>
-                            </MudTd>
-                            <MudTd>
-                                <MudTooltip Text="Eliminar">
-                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                                   Color="Color.Error"
+                                <MudTooltip Text="Atender">
+                                    <MudIconButton Icon="@Icons.Material.Filled.AddBox"
+                                                   Color="Color.Primary"
                                                    Size="Size.Small"
-                                                   OnClick="@(() => MostrarDetalle())" />
+                                                   OnClick="@(() => AbrirModalAtencion(context))" />
                                 </MudTooltip>
                             </MudTd>
                         </RowTemplate>

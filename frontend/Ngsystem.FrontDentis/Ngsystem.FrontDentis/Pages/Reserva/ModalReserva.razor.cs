@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using CurrieTechnologies.Razor.SweetAlert2;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Ngsystem.FrontDentis.Components;
 using Ngsystem.Infrastructure.Dtos;
 using Ngsystem.Infrastructure.Infrastructure.Http;
+using Refit;
 
 namespace Ngsystem.FrontDentis.Pages.Reserva;
 
@@ -11,35 +13,32 @@ public class ModalReservaBase : ComponentBase
     [Parameter] public LisReservaResponseDto objReserva { get; set; } = new LisReservaResponseDto();
 
     [Inject] IReserva _reservaServicio { get; set; }
+    public MudForm? form { get; set; }
     [Inject] ISnackbar _snackBar { get; set; }
     [Inject] IDialogService _dialogServicio { get; set; }
+    [Inject] SweetAlertService _swal { get; set; }
+    [Inject] NavigationManager _nav { get; set; }
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
-    public DateTime? fechaReserva = DateTime.Today;
-    public DateTime? fechaAtencion = DateTime.Today;
-    public TimeSpan? horaAtencion = null;
 
     protected override void OnInitialized()
     {
-        if (!string.IsNullOrWhiteSpace(objReserva.FechaReserva)
-            && DateTime.TryParse(objReserva.FechaReserva, out var fr))
-            fechaReserva = fr;
+        if (objReserva.FechaReserva == null)
+            objReserva.FechaReserva = DateTime.Today;
 
-        if (!string.IsNullOrWhiteSpace(objReserva.FechaAtencion)
-            && DateTime.TryParse(objReserva.FechaAtencion, out var fa))
-            fechaAtencion = fa;
-
-        if (!string.IsNullOrWhiteSpace(objReserva.HoraAtencion)
-            && TimeSpan.TryParse(objReserva.HoraAtencion.Split('.')[0], out var ha))
-            horaAtencion = ha;
+        if (objReserva.FechaAtencion == null)
+            objReserva.FechaAtencion = DateTime.Today;
     }
 
     public void Cancel() => MudDialog.Cancel();
 
     public async Task MostrarConfirmacion()
     {
-        if (string.IsNullOrWhiteSpace(objReserva.Dni) || string.IsNullOrWhiteSpace(objReserva.EstadoReserva))
-            return;
+        if (form is not null)
+        {
+            await form.Validate();
+            if (!form.IsValid)
+                return;
+        }
 
         var confirmDialog = _dialogServicio.Show<ModalDialog>("Confirmar", new DialogParameters
         {
@@ -54,42 +53,78 @@ public class ModalReservaBase : ComponentBase
 
     public async Task Guardar()
     {
-        bool exito;
-        string mensaje;
-
         var request = new SaveReservaRequestDto
         {
             IdPaciente = objReserva.IdPaciente > 0 ? objReserva.IdPaciente : 0,
             EstadoReserva = objReserva.EstadoReserva ?? string.Empty,
-            FechaReserva = fechaReserva?.ToString("dd/MM/yyyy") ?? string.Empty,
-            FechaAtencion = fechaAtencion?.ToString("dd/MM/yyyy") ?? string.Empty,
-            HoraAtencion = horaAtencion?.ToString(@"hh\:mm") ?? string.Empty,
+            FechaReserva = objReserva.FechaReserva,
+            FechaAtencion = objReserva.FechaAtencion,
+            HoraAtencion = objReserva.HoraAtencion,
             MotivoConsulta = objReserva.MotivoConsulta ?? string.Empty,
             Observaciones = objReserva.Observaciones,
             Dni = objReserva.Dni
         };
 
-        if (objReserva.IdReserva == 0)
+        try
         {
-            var response = await _reservaServicio.GrabarReserva(request);
-            exito = response.Status;
-            mensaje = "Reserva registrada correctamente";
+            if (objReserva.Id == 0)
+            {
+                var response = await _reservaServicio.GrabarReserva(request);
+                if (response.Status)
+                {
+                    _snackBar.Add("Reserva registrada correctamente", Severity.Success);
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    _snackBar.Add("Hubo un error al guardar la reserva", Severity.Error);
+                }
+            }
+            else
+            {
+                request.Id = objReserva.Id;
+                var response = await _reservaServicio.UpdateReserva(request);
+                if (response.Status)
+                {
+                    _snackBar.Add("Reserva actualizada correctamente", Severity.Success);
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    _snackBar.Add("Hubo un error al guardar la reserva", Severity.Error);
+                }
+            }
         }
-        else
+        catch (ApiException ex)
         {
-            var response = await _reservaServicio.UpdateReserva(request);
-            exito = response.Status;
-            mensaje = "Reserva actualizada correctamente";
-        }
+            var content = ex.Content ?? string.Empty;
+            if (content.Contains("no está registrado"))
+            {
+                MudDialog.Cancel();
 
-        if (exito)
-        {
-            _snackBar.Add(mensaje, Severity.Success);
-            MudDialog.Close(DialogResult.Ok(true));
-        }
-        else
-        {
-            _snackBar.Add("Hubo un error al guardar la reserva", Severity.Error);
+                var result = await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Paciente no encontrado",
+                    Text = "El paciente con ese DNI no está registrado. ¿Desea ir a registrarlo ahora?",
+                    Icon = SweetAlertIcon.Warning,
+                    ShowConfirmButton = true,
+                    ConfirmButtonText = "Sí, registrar",
+                    ShowCancelButton = true,
+                    CancelButtonText = "Cancelar"
+                });
+
+                if (result.IsConfirmed)
+                    _nav.NavigateTo("/Paciente/Paciente?action=nuevo");
+            }
+            else
+            {
+                await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error",
+                    Text = content,
+                    Icon = SweetAlertIcon.Error
+                });
+            }
         }
     }
 }

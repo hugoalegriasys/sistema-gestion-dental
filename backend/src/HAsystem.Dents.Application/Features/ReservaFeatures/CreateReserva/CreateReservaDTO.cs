@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualBasic;
-using System.Runtime.CompilerServices;
-
-namespace HAsystem.Dents.Application.Features.ReservaFeacture.CreateReserva;
+﻿namespace HAsystem.Dents.Application.Features.ReservaFeacture.CreateReserva;
 public record ReservaCreateRequestDto(
     int IdPaciente,
     string EstadoReserva,
-    string FechaReserva,
-    string FechaAtencion,
-    string HoraAtencion,
+    DateTime FechaReserva,
+    DateTime FechaAtencion,
+    TimeSpan HoraAtencion,
     string MotivoConsulta,
     string? Observaciones,
     string? Dni

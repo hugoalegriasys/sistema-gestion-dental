@@ -1,4 +1,5 @@
 ﻿
+using HAsystem.Dents.Domain.Aggregates.CitaAggregates;
 using HAsystem.Dents.Domain.Aggregates.DiagnosticoTratamientoAggregates;
 using HAsystem.Dents.Domain.Aggregates.HistorialClinicoAggregates;
 using HAsystem.Dents.Domain.Aggregates.OdontogramaAggregates;
@@ -15,6 +16,7 @@ public class DentalContext : DbContext, IUnitOfWork
     public DbSet<HistorialClinico> HistorialClinico { get; set; }
     public DbSet<DiagnosticoTratamiento> DiagnosticoTratamiento { get; set; }
     public DbSet<Odontograma> Odontograma { get; set; }
+    public DbSet<Cita> Cita { get; set; }
 
     public DentalContext(DbContextOptions<DentalContext> options)
         : base(options)
@@ -27,6 +29,7 @@ public class DentalContext : DbContext, IUnitOfWork
         modelBuilder.ApplyConfiguration(new HistorialClinicoConfiguration());
         modelBuilder.ApplyConfiguration(new DiagnosticoTratamientoConfiguration());
         modelBuilder.ApplyConfiguration(new OdontogramaConfiguration());
+        modelBuilder.ApplyConfiguration(new CitaConfiguration());
     }
 
     public async Task<int> SaveAsync(CancellationToken cancellationToken = default)

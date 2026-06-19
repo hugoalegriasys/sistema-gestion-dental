@@ -91,7 +91,6 @@ namespace Ngsystem.FrontDentis.Pages.Reserva
             "Confirmada" => Color.Success,
             "Pendiente"  => Color.Warning,
             "Cancelada"  => Color.Error,
-            "Atendida"   => Color.Primary,
             "Reprogramada" => Color.Info,
             _            => Color.Default
         };
@@ -100,11 +99,12 @@ namespace Ngsystem.FrontDentis.Pages.Reserva
         {
             var request = new SaveReservaRequestDto
             {
+                Id = reserva.Id,
                 IdPaciente = reserva.IdPaciente,
                 EstadoReserva = nuevoEstado,
-                FechaReserva = reserva.FechaReserva ?? string.Empty,
-                FechaAtencion = reserva.FechaAtencion ?? string.Empty,
-                HoraAtencion = reserva.HoraAtencion ?? string.Empty,
+                FechaReserva = reserva.FechaReserva,
+                FechaAtencion = reserva.FechaAtencion,
+                HoraAtencion = reserva.HoraAtencion,
                 MotivoConsulta = reserva.MotivoConsulta ?? string.Empty,
                 Observaciones = reserva.Observaciones,
                 Dni = reserva.Dni

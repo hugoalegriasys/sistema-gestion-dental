@@ -11,9 +11,9 @@ public static class CreateReservaMapping
             request.FechaReserva,
             request.FechaAtencion,
             request.HoraAtencion,
+            request.Dni,
             request.MotivoConsulta,
-            request.Observaciones,
-            request.Dni
+            request.Observaciones
             );
     }
     public static ReservaCreateResponseDTO MapToReservaResponse(this Reserva reserva)
